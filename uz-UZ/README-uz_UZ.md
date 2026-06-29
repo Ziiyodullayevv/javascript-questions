@@ -371,3 +371,432 @@ Funktsiya - bu ob'ektning maxsus turi. Siz yozgan kodingiz haqiqiy funktsiyaning
 
 </p>
 </details>
+---
+
+###### 11. Natija qanday bo'ladi?
+
+```javascript
+function Person(firstName, lastName) {
+  this.firstName = firstName;
+  this.lastName = lastName;
+}
+
+const member = new Person('Lydia', 'Hallie');
+Person.getFullName = function() {
+  return `${this.firstName} ${this.lastName}`;
+};
+
+console.log(member.getFullName());
+```
+
+- A: `TypeError`
+- B: `SyntaxError`
+- C: `Lydia Hallie`
+- D: `undefined` `undefined`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: A
+
+JavaScript-da funktsiyalar ob'ektdir, shuning uchun `getFullName` metodi funktsiya-konstruktor ob'ektining o'ziga qo'shiladi. Shu sababli biz `Person.getFullName()` ni chaqirishimiz mumkin, lekin `member.getFullName()` chaqirilsa `TypeError` xatosi tashlanadi.
+
+Agar biror metod ob'ektning barcha nusxalari (instances) uchun mavjud bo'lishini xohlasangiz, uniy prototip (`prototype`) xususiyatiga qo'shishingiz kerak:
+
+```js
+Person.prototype.getFullName = function() {
+  return `${this.firstName} ${this.lastName}`;
+};
+```
+
+</p>
+</details>
+
+---
+
+###### 12. Natija qanday bo'ladi?
+
+```javascript
+function Person(firstName, lastName) {
+  this.firstName = firstName;
+  this.lastName = lastName;
+}
+
+const lydia = new Person('Lydia', 'Hallie');
+const sarah = Person('Sarah', 'Smith');
+
+console.log(lydia);
+console.log(sarah);
+```
+
+- A: `Person {firstName: "Lydia", lastName: "Hallie"}` va `undefined`
+- B: `Person {firstName: "Lydia", lastName: "Hallie"}` va `Person {firstName: "Sarah", lastName: "Smith"}`
+- C: `Person {firstName: "Lydia", lastName: "Hallie"}` va `{}`
+- D: `Person {firstName: "Lydia", lastName: "Hallie"}` va `ReferenceError`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: A
+
+`sarah` uchun biz `new` kalit so'zidan foydalanmadik. `new` ishlatilganda, `this` biz yaratgan yangi bo'sh ob'ektga ishora qiladi. Biroq, agar `new` qo'shmasangiz, `this` **global ob'ekt**ga ishora qiladi!
+
+Biz `this.firstName` ni `"Sarah"` ga va `this.lastName` ni `"Smith"` ga teng deb aytdik. Biz aslida `global.firstName = 'Sarah'` va `global.lastName = 'Smith'` ni belgilab qo'ydik. `sarah`ning o'zi esa `undefined` bo'lib qoladi, chunki biz `Person` funktsiyasidan hech qanday qiymat qaytarmaymiz.
+
+</p>
+</details>
+
+---
+
+###### 13. Hodisalarning tarqalishi (event propagation)ning 3 ta bosqichi qaysilar?
+
+- A: Target > Capturing > Bubbling
+- B: Bubbling > Target > Capturing
+- C: Target > Bubbling > Capturing
+- D: Capturing > Target > Bubbling
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: D
+
+**Capturing** (Tutilish) bosqichida hodisa ajdod elementlar orqali nishon (target) elementgacha tushib boradi. So'ngra u **target** (nishon) elementga yetib boradi va **bubbling** (ko'piklanish/yuqoriga ko'tarilish) bosqichi boshlanadi.
+
+<img src="https://i.imgur.com/N18oRgd.png" width="200">
+
+</p>
+</details>
+
+---
+
+###### 14. Barcha ob'ektlar prototipga ega.
+
+- A: rost (true)
+- B: yolg'on (false)
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: B
+
+**Baza ob'ekt (base object)**dan tashqari barcha ob me'yori ob'ektlar prototipga ega. Baza ob'ekt - bu foydalanuvchi tomonidan yaratilgan yoki `new` kalit so'zi yordamida yaratilgan ob'ekt. Baza ob'ekt `.toString` kabi ba'zi metod va xususiyatlarga kirish imkoniga ega. Shuning uchun siz JavaScript-ning ichki metodlaridan foydalanishingiz mumkin! Bunday metodlarning barchasi prototipda mavjud. JavaScript metodni to'g'ridan-to me'yori ob'ektda topa olmasa ham, u prototiplar zanjiri (prototype chain) bo'ylab pastga tushadi va uni o'sha yerdan topadi.
+
+</p>
+</details>
+
+---
+
+###### 15. Natija qanday bo'ladi?
+
+```javascript
+function sum(a, b) {
+  return a + b;
+}
+
+sum(1, '2');
+```
+
+- A: `NaN`
+- B: `TypeError`
+- C: `"12"`
+- D: `3`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: C
+
+JavaScript **dinamik tiplangan til**dir: biz o'zgaruvchilarning tiplarini belgilamaymiz. Qiymatlar siz bilmagan holda avtopilotda boshqa tipga o'girilishi mumkin, bu **yashirin tiplarni o'g'irish (implicit type coercion)** deb ataladi. **Coercion** - bu bir tipdan boshqasiga o'girishdir.
+
+Ushbu misolda, funktsiya mantiqan to'g'ri ishlashi va qiymat qaytarishi uchun JavaScript `1` sonini satrga (string) o'g'iradi. Sonli tip (`1`) va satrli tip (`'2'`) qo'shilayotganda, son satr sifatida ko'riladi. Biz satrlarni `"Hello" + "World"` kabi birhtirishimiz mumkin, shuning uchun bu yerda `"1" + "2"` sodir bo'ladi va `"12"` qaytaradi.
+
+</p>
+</details>
+
+---
+
+###### 16. Natija qanday bo'ladi?
+
+```javascript
+let number = 0;
+console.log(number++);
+console.log(++number);
+console.log(number);
+```
+
+- A: `1` `1` `2`
+- B: `1` `2` `2`
+- C: `0` `2` `2`
+- D: `0` `1` `2`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: C
+
+**Postfiks** unar `++` operatori:
+1. Qiymatni qaytaradi (bu `0` qaytaradi)
+2. Qiymatni oshiradi (son endi `1` ga teng)
+
+**Prefiks** unar `++` operatori:
+1. Qiymatni oshiradi (son endi `2` ga teng)
+2. Qiymatni qaytaradi (bu `2` qaytaradi)
+
+Natijada `0 2 2` chiqadi.
+
+</p>
+</details>
+
+---
+
+###### 17. Natija qanday bo'ladi?
+
+```javascript
+function getPersonInfo(one, two, three) {
+  console.log(one);
+  console.log(two);
+  console.log(three);
+}
+
+const person = 'Lydia';
+const age = 21;
+
+getPersonInfo`${person} is ${age} years old`;
+```
+
+- A: `"Lydia"` `21` `["", " is ", " years old"]`
+- B: `["", " is ", " years old"]` `"Lydia"` `21`
+- C: `"Lydia"` `["", " is ", " years old"]` `21`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: B
+
+Siz **tagged template literals** (teglangan shablon satrlari)dan foydalansangiz, birinchi argumentning qiymati har doim satr qiymatlari massivi bo'ladi. Qolgan argumentlar esa uzatilgan ifodalarning qiymatlarini oladi!
+
+</p>
+</details>
+
+---
+
+###### 18. Natija qanday bo'ladi?
+
+```javascript
+function checkAge(data) {
+  if (data === { age: 18 }) {
+    console.log('You are an adult!');
+  } else if (data == { age: 18 }) {
+    console.log('You are still an adult.');
+  } else {
+    console.log(`Hmm.. You don't have an age I guess`);
+  }
+}
+
+checkAge({ age: 18 });
+```
+
+- A: `You are an adult!`
+- B: `You are still an adult.`
+- C: `Hmm.. You don't have an age I guess`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: C
+
+Tenglikni tekshirayotganda, primitivlar ularning *qiymati* bo'yicha taqqoslanadi, ob'ektlar esa ularning *havolasi (reference)* bo'yicha taqqoslanadi. JavaScript ob'ektlar xotiradagi bir xil joyga havola ko'rsatayotganini tekshiradi.
+
+Biz taqqoslayotgan ikkita ob'ektda unday emas: parametr sifatida uzatilgan ob'ekt tenglikni tekshirish uchun ishlatgan ob'ektimizdan xotirada boshqa joyga ishora qiladi.
+
+Shu sababli `{ age: 18 } === { age: 18 }` va `{ age: 18 } == { age: 18 }` ikkalasi ham `false` qaytaradi.
+
+</p>
+</details>
+
+---
+
+###### 19. Natija qanday bo'ladi?
+
+```javascript
+function getAge(...args) {
+  console.log(typeof args);
+}
+
+getAge(21);
+```
+
+- A: `"number"`
+- B: `"array"`
+- C: `"object"`
+- D: `"NaN"`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: C
+
+Rest parametri (`...args`) bizga barcha qolgan argumentlarni massivga "yig'ish" imkonini beradi. Massiv bu ob'ektdir, shuning uchun `typeof args` `"object"` qaytaradi.
+
+</p>
+</details>
+
+---
+
+###### 20. Natija qanday bo'ladi?
+
+```javascript
+function getAge() {
+  'use strict';
+  age = 21;
+  console.log(age);
+}
+
+getAge();
+```
+
+- A: `21`
+- B: `undefined`
+- C: `ReferenceError`
+- D: `TypeError`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: C
+
+`"use strict"` yordamida adashib global o'zgaruvchilar e'lon qilib qo'ymasligingizga ishonch hosil qilishingiz mumkin. Biz hech qachon `age` o'zgaruvchisini e'lon qilmaganmiz va `"use strict"` ishlatganimiz uchun u `ReferenceError` tashlaydi. Agar `"use strict"` ishlatmaganimizda edi, u ishlagan bo'lardi, chunki `age` xususiyati global ob'ektga qo'shilgan bo'lardi.
+
+</p>
+</details>
+
+---
+
+###### 21. `sum` qiymati nimaga teng bo'ladi?
+
+```javascript
+const sum = eval('10*10+5');
+```
+
+- A: `105`
+- B: `"105"`
+- C: `TypeError`
+- D: `"10*10+5"`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: A
+
+`eval` satr sifatida uzatilgan kodni hisoblaydi va bajaradi. Agar u ushbu holatdagidek ifoda bo'lsa, u ifodani hisoblaydi. `10 * 10 + 5` ifodasi `105` sonini qaytaradi.
+
+</p>
+</details>
+
+---
+
+###### 22. `cool_secret` qancha vaqt davomida foydalanish mumkin bo'ladi?
+
+```javascript
+sessionStorage.setItem('cool_secret', 123);
+```
+
+- A: Abadiy, ma'lumotlar yo'qolmaydi.
+- B: Foydalanuvchi ilovani/vkladkani (tab) yopganigacha.
+- C: Foydalanuvchi nafaqat vkladkani, balki butun brauzerni yopganigacha.
+- D: Foydalanuvchi kompyuterni o'chirganigacha.
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: B
+
+`sessionStorage`da saqlangan ma'lumotlar *vkladka (tab)* yopilgandan keyin o'chirib tashlanadi.
+
+Agar siz `localStorage`dan foydalanganingizda edi, ma'lumotlar masalan `localStorage.clear()` chaqirilmaguncha abadiy u yerda saqlanib qolardi.
+
+</p>
+</details>
+
+---
+
+###### 23. Natija qanday bo'ladi?
+
+```javascript
+var num = 8;
+var num = 10;
+
+console.log(num);
+```
+
+- A: `8`
+- B: `10`
+- C: `SyntaxError`
+- D: `ReferenceError`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: B
+
+`var` kalit so'zi bilan siz bir xil nomli bir nechta o'zgaruvchilarni e'lon qilishingiz mumkin. O'zgaruvchi keyin oxirgi tayinlangan qiymatni saqlab qoladi.
+
+Siz buni `let` yoki `const` bilan qila olmaysiz, chunki ular blok doirasiga ega va shuning uchun qayta e'lon qilinishi mumkin emas.
+
+</p>
+</details>
+
+---
+
+###### 24. Natija qanday bo'ladi?
+
+```javascript
+const obj = { 1: 'a', 2: 'b', 3: 'c' };
+const set = new Set([1, 2, 3, 4, 5]);
+
+obj.hasOwnProperty('1');
+obj.hasOwnProperty(1);
+set.has('1');
+set.has(1);
+```
+
+- A: `false` `true` `false` `true`
+- B: `false` `true` `true` `true`
+- C: `true` `true` `false` `true`
+- D: `true` `true` `true` `true`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: C
+
+Barcha ob'ekt kalitlari (Symbol'lardan tashqari) o'zingiz satr sifatida yozmasangiz ham kapot ostida satrlardir. Shuning uchun `obj.hasOwnProperty('1')` ham true qaytaradi.
+
+Set uchun bu tarzda ishlamaydi. Bizning setda `'1'` (satr) yo'q: `set.has('1')` `false` qaytaradi. Unda sonli `1` tipi bor, `set.has(1)` `true` qaytaradi.
+
+</p>
+</details>
+
+---
+
+###### 25. Natija qanday bo'ladi?
+
+```javascript
+const obj = { a: 'one', b: 'two', a: 'three' };
+console.log(obj);
+```
+
+- A: `{ a: "one", b: "two" }`
+- B: `{ b: "two", a: "three" }`
+- C: `{ a: "three", b: "two" }`
+- D: `SyntaxError`
+
+<details><summary><b>Javob</b></summary>
+<p>
+
+#### Javob: C
+
+Agar bir xil nomli ikkita kalit bo'lsa, kalit ustidan qayta yoziladi. Uninig o'rni saqlanib qoladi, lekin qiymati oxirgi ko'rsatilgan qiymat bo'ladi.
+
+</p>
+</details>
